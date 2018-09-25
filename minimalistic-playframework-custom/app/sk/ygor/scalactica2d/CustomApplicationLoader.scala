@@ -22,6 +22,7 @@ class CustomApplicationLoader extends ApplicationLoader {
                 Seq(
                   s"URI: ${requestHeader.uri}",
                   s"User agent: ${requestHeader.headers.get("User-Agent").getOrElse("Unknown")}",
+                  s"Listening on port: ${configuration.get[String]("play.server.http.port")}",
                 ).mkString("\n")
               )
             )
