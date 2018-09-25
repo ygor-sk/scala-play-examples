@@ -20,9 +20,10 @@ class CustomApplicationLoader extends ApplicationLoader {
             override def apply(request: Request[String]): Future[Result] = Future.successful(
               Results.Ok(
                 Seq(
-                  s"URI: ${requestHeader.uri}",
+                  s"URI: ${requestHeader.method} ${requestHeader.uri}",
                   s"User agent: ${requestHeader.headers.get("User-Agent").getOrElse("Unknown")}",
                   s"Listening on port: ${configuration.get[String]("play.server.http.port")}",
+                  s"Received body of size: ${request.body.length}",
                 ).mkString("\n")
               )
             )
