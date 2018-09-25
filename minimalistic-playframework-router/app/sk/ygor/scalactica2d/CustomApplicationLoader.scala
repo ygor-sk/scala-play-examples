@@ -18,16 +18,6 @@ class CustomApplicationLoader extends ApplicationLoader {
       override def httpFilters: Seq[EssentialFilter] = Seq.empty
     }
 
-    new DefaultApplication(
-      components.environment,
-      components.applicationLifecycle,
-      components.injector,
-      components.configuration,
-      components.requestFactory,
-      components.httpRequestHandler,
-      components.httpErrorHandler,
-      components.actorSystem,
-      components.materializer,
-    )
+    components.application
   }
 }
