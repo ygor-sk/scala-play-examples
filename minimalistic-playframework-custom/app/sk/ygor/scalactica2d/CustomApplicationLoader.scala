@@ -14,14 +14,14 @@ class CustomApplicationLoader extends ApplicationLoader {
     val components = new BuiltInComponentsFromContext(context) {
       override def router: Router = new SimpleRouter {
         override def routes: Routes = {
-          case requestHeader => new play.api.mvc.Action[String] {
+          case _ => new play.api.mvc.Action[String] {
             override def parser: BodyParser[String] = playBodyParsers.tolerantText
 
             override def apply(request: Request[String]): Future[Result] = Future.successful(
               Results.Ok(
                 Seq(
-                  s"URI: ${requestHeader.method} ${requestHeader.uri}",
-                  s"User agent: ${requestHeader.headers.get("User-Agent").getOrElse("Unknown")}",
+                  s"URI: ${request.method} ${request.uri}",
+                  s"User agent: ${request.headers.get("User-Agent").getOrElse("Unknown")}",
                   s"Listening on port: ${configuration.get[String]("play.server.http.port")}",
                   s"Received body of size: ${request.body.length}",
                 ).mkString("\n")
