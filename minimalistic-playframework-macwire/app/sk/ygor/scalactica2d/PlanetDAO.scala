@@ -4,8 +4,6 @@ import java.sql.Connection
 
 import javax.sql.DataSource
 
-import scala.collection.mutable.ListBuffer
-
 class PlanetDAO {
 
   private var dataSource: DataSource = _
