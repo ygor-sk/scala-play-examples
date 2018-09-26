@@ -11,7 +11,7 @@ class PlanetDAO {
   private var dataSource: DataSource = _
 
   def fetchAllPlanetNames: Seq[String] = {
-    var connection: Connection = _
+    var connection: Connection = null
     try {
       connection = dataSource.getConnection
       val resultSet = connection.prepareStatement("select name from planet").executeQuery()
