@@ -5,10 +5,10 @@ import play.api.Configuration
 
 trait DaoComponents {
 
-  lazy val userDAO: UserDAO = {
-    val userDAO = wire[UserDAO]
-    userDAO.setDataSource(dataSource)
-    userDAO
+  lazy val planetDAO: PlanetDAO = {
+    val planetDAO = wire[PlanetDAO]
+    planetDAO.setDataSource(dataSource)
+    planetDAO
   }
 
   lazy val dataSource: BasicDataSource = {
