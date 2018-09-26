@@ -11,9 +11,7 @@ import sk.ygor.scalactica2d.services.Scalactica2dServiceComponents
 
 class MacwireApplicationLoader extends ApplicationLoader {
 
-  def load(context: Context): Application = {
-    new ApplicationComponents(context).application
-  }
+  def load(context: Context): Application = new ApplicationComponents(context).application
 
   class ApplicationComponents(context: Context) extends BuiltInComponentsFromContext(context)
     with Scalactica2dWebComponents
