@@ -1,4 +1,4 @@
-package util
+package sk.ygor.scalactica2d.util
 
 object StringUtils {
 
