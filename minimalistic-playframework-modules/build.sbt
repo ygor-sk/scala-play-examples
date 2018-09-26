@@ -1,3 +1,11 @@
+lazy val commonSettings = Seq(
+  organization := "sk.ygor",
+  version := "1.0-SNAPSHOT",
+  scalaVersion := "2.12.6",
+  libraryDependencies += "com.softwaremill.macwire" %% "macros" % "2.3.1" % "provided",
+  libraryDependencies += "com.softwaremill.macwire" %% "util" % "2.3.1",
+)
+
 lazy val root = (project in file("."))
   .settings(
     name := "scalactica2d",
@@ -43,13 +51,5 @@ lazy val scalactica2dMacro = (project in file("modules/scalactica2d-macro"))
     name := "scalactica2d-macro",
     commonSettings,
   )
-
-lazy val commonSettings = Seq(
-  organization := "sk.ygor",
-  version := "1.0-SNAPSHOT",
-  scalaVersion := "2.12.6",
-  libraryDependencies += "com.softwaremill.macwire" %% "macros" % "2.3.1" % "provided",
-  libraryDependencies += "com.softwaremill.macwire" %% "util" % "2.3.1",
-)
 
 addCommandAlias("runWeb", "scalactica2dWeb/run")
