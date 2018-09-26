@@ -1,0 +1,2 @@
+GET         /foo/*path        sk.ygor.scalactica2d.web.ApplicationController.foo(path)
+POST        /foo/*path        sk.ygor.scalactica2d.web.ApplicationController.foo(path)
