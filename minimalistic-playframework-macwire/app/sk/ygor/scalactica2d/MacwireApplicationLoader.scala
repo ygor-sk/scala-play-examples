@@ -12,7 +12,12 @@ class MacwireApplicationLoader extends ApplicationLoader {
   def load(context: Context): Application = {
     val components: BuiltInComponentsFromContext = new BuiltInComponentsFromContext(context) {
 
-      lazy val router: Router = wire[Routes]
+      // https://github.com/adamw/macwire/issues/82
+      // https://www.lucidchart.com/techblog/2018/01/19/compile-time-dependency-injection-with-play/
+      lazy val router: Router = {
+        implicit val prefix: String = "/"
+        wire[Routes]
+      }
 
       lazy val applicationController: ApplicationController = wire[ApplicationController]
 
