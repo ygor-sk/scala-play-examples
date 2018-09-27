@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Database Transactions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<ul>
+    <li><a href="/listPlanetsAndEvents">List all planets and events</a></li>
+    <li>
+        Add random planet and at least one moon (50% of requests fail after the planetName is created)
+        <ul>
+            <li><a href="/addPlanetNoTransaction">No transaction</a>
+            <li><a href="/addPlanetNoTransactionUseInnerTx">No transaction (use inner TX)</a>
+            <li><a href="/addPlanetProgrammaticTransaction">Programmatic transaction</a>
+            <li><a href="/addPlanetProgrammaticTransactionUseInnerTx">Programmatic transaction (use inner TX)</a>
+            <li><a href="/addPlanetAnnotatedTransaction">Annotated transaction</a>
+            <li><a href="/addPlanetAnnotatedTransactionUseInnerTx">Annotated transaction (use inner TX)</a>
+            </li>
+        </ul>
+    </li>
+    <li><a href="/restorePlanets">Restore list of planets</a></li>
+
+</ul>
+</body>
+</html>
