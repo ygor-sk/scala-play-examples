@@ -39,34 +39,36 @@ public class SolarSystemService {
     }
 
     public PlanetAndMoonNames addPlanetNoTransaction(boolean useInnerTx) {
-        PlanetAndMoonNames pm = generatePlanetAndMoons();
-        insertEvent("addPlanetNoTransaction", pm);
-        return useInnerTx ? addPlanetTx(pm) : addPlanetNoTx(pm);
+        insertEvent("addPlanetNoTransaction");
+        PlanetAndMoonNames pm = useInnerTx ? addPlanetTx() : addPlanetNoTx();
+        return insertEvent("addPlanetNoTransaction", pm);
     }
 
     public PlanetAndMoonNames addPlanetProgrammaticTransaction(boolean useInnerTx) {
-        PlanetAndMoonNames pm = generatePlanetAndMoons();
         return transactionTemplate.execute(txStatus -> {
-            insertEvent("addPlanetProgrammaticTransaction", pm);
-            return useInnerTx ? addPlanetTx(pm) : addPlanetNoTx(pm);
+            insertEvent("addPlanetProgrammaticTransaction");
+            PlanetAndMoonNames pm = useInnerTx ? addPlanetTx() : addPlanetNoTx();
+            return insertEvent("addPlanetProgrammaticTransaction", pm);
         });
     }
 
     @Transactional
     public PlanetAndMoonNames addPlanetAnnotatedTransaction(boolean useInnerTx) {
-        PlanetAndMoonNames pm = generatePlanetAndMoons();
-        insertEvent("addPlanetAnnotatedTransaction", pm);
-        return useInnerTx ? addPlanetTx(pm) : addPlanetNoTx(pm);
+        insertEvent("addPlanetAnnotatedTransaction");
+        PlanetAndMoonNames pm = useInnerTx ? addPlanetTx() : addPlanetNoTx();
+        return insertEvent("addPlanetAnnotatedTransaction", pm);
     }
 
-    private PlanetAndMoonNames addPlanetNoTx(PlanetAndMoonNames pm) {
+    private PlanetAndMoonNames addPlanetNoTx() {
+        PlanetAndMoonNames pm = generatePlanetAndMoons();
         int planetId = solarSystemDAO.insertPlanet(pm.getPlanetName());
         maybeThrowException();
         pm.getMoonNames().forEach(moonName -> solarSystemDAO.insertMoon(moonName, planetId));
         return pm;
     }
 
-    private PlanetAndMoonNames addPlanetTx(PlanetAndMoonNames pm) {
+    private PlanetAndMoonNames addPlanetTx() {
+        PlanetAndMoonNames pm = generatePlanetAndMoons();
         return transactionTemplate.execute(status -> {
             int planetId = solarSystemDAO.insertPlanet(pm.getPlanetName());
             maybeThrowException();
@@ -87,8 +89,13 @@ public class SolarSystemService {
         return new PlanetAndMoonNames(planetName, moonNames);
     }
 
-    private void insertEvent(String event, PlanetAndMoonNames pm) {
-        solarSystemDAO.insertEvent(event + ": " + pm.getPlanetName());
+    private void insertEvent(String event) {
+        solarSystemDAO.insertEvent("[Start]: " + event);
+    }
+
+    private PlanetAndMoonNames insertEvent(String event, PlanetAndMoonNames pm) {
+        solarSystemDAO.insertEvent("[End]: " + event + ": " + pm.getPlanetName());
+        return pm;
     }
 
     private void maybeThrowException() {
