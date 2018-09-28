@@ -10,12 +10,14 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@SuppressWarnings("Duplicates")
 @Service
 public class SolarSystemService {
 
     @Autowired
     private SolarSystemDAO solarSystemDAO;
+
+    @Autowired
+    private Utils utils;
 
     @Autowired
     TransactionTemplate transactionTemplate;
@@ -59,19 +61,21 @@ public class SolarSystemService {
         return insertEvent("addPlanetAnnotatedTransaction", pm);
     }
 
+    @SuppressWarnings("Duplicates")
     private PlanetAndMoonNames addPlanetNoTx() {
         PlanetAndMoonNames pm = generatePlanetAndMoons();
         int planetId = solarSystemDAO.insertPlanet(pm.getPlanetName());
-        maybeThrowException();
+        utils.maybeThrowException();
         pm.getMoonNames().forEach(moonName -> solarSystemDAO.insertMoon(moonName, planetId));
         return pm;
     }
 
+    @SuppressWarnings("Duplicates")
     private PlanetAndMoonNames addPlanetTx() {
         PlanetAndMoonNames pm = generatePlanetAndMoons();
         return transactionTemplate.execute(status -> {
             int planetId = solarSystemDAO.insertPlanet(pm.getPlanetName());
-            maybeThrowException();
+            utils.maybeThrowException();
             pm.getMoonNames().forEach(moonName -> solarSystemDAO.insertMoon(moonName, planetId));
             return pm;
         });
@@ -98,9 +102,4 @@ public class SolarSystemService {
         return pm;
     }
 
-    private void maybeThrowException() {
-        if (new Random().nextBoolean()) {
-            throw new RuntimeException("Simulated exception");
-        }
-    }
 }

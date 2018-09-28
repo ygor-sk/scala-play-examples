@@ -6,9 +6,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Random;
 
 @Component
-public class DatabaseUtils {
+public class Utils {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -68,5 +69,14 @@ public class DatabaseUtils {
         );
     }
 
+    public void maybeThrowException() {
+        if (new Random().nextBoolean()) {
+            throw new RuntimeException("Simulated exception");
+        }
+    }
+
+    public void throwException() {
+        throw new RuntimeException("Simulated exception");
+    }
 
 }

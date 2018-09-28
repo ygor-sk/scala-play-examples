@@ -13,7 +13,10 @@ class WebController {
     private SolarSystemService solarSystemService;
 
     @Autowired
-    private DatabaseUtils databaseUtils;
+    private Utils utils;
+
+    @Autowired
+    private ConnectionLeakDAO connectionLeakDAO;
 
     @RequestMapping("/listPlanetsAndEvents")
     String listPlanetsAndEvents() {
@@ -75,8 +78,32 @@ class WebController {
 
     @RequestMapping("/restorePlanets")
     String restorePlanets() {
-        databaseUtils.setupDatabase();
+        utils.setupDatabase();
         return "List of planets was restored";
+    }
+
+    @RequestMapping("/insertWithForgottenCommit")
+    String insertWithForgottenCommit() throws Exception {
+        connectionLeakDAO.insertWithForgottenCommit();
+        return "Inserted new user";
+    }
+
+    @RequestMapping("/readRowsWithNoTransaction")
+    String readRowsWithNoTransaction() throws Exception {
+        List<Integer> rows = connectionLeakDAO.readRowsWithNoTransaction();
+        return "List of all users: " + rows;
+    }
+
+    @RequestMapping("/insertWithProperHandling")
+    String insertWithProperHandling() throws Exception {
+        connectionLeakDAO.insertWithProperHandling(false);
+        return "Inserted new user";
+    }
+
+    @RequestMapping("/insertWithProperHandlingRollback")
+    String insertWithProperHandlingRollback() throws Exception {
+        connectionLeakDAO.insertWithProperHandling(true);
+        return "Inserted new user";
     }
 
     private String formatCreatedPlanetMessage(PlanetAndMoonNames pm) {

@@ -5,6 +5,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
+<h1>Transaction leaks</h1>
+<ul>
+    <li><a href="/insertWithForgottenCommit">Insert user (forgotten commit)</a></li>
+    <li><a href="/readRowsWithNoTransaction">Read users (no transaction handling)</a></li>
+    <li><a href="/insertWithProperHandling">Insert user (commit properly)</a></li>
+    <li><a href="/insertWithProperHandlingRollback">Insert duplicate user (rollback properly)</a></li>
+</ul>
+<h1>Transaction demarcation</h1>
 <ul>
     <li><a href="/listPlanetsAndEvents">List all planets and events</a></li>
     <li>
@@ -20,7 +28,6 @@
         </ul>
     </li>
     <li><a href="/restorePlanets">Restore list of planets</a></li>
-
 </ul>
 </body>
 </html>

@@ -9,7 +9,7 @@ public class MainApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(MainApplication.class, args);
-        context.getBean(DatabaseUtils.class).setupDatabase();
+        context.getBean(Utils.class).setupDatabase();
     }
 
 }
