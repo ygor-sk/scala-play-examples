@@ -1,6 +1,5 @@
-package sk.ygor.dbtransactions;
+package sk.ygor.dbtransactions.connectionleak;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -17,7 +16,11 @@ public class ConnectionLeakDAO {
     private final DataSource dataSource;
 
     public ConnectionLeakDAO() throws SQLException {
-        this.dataSource = createDataSource();
+        this.dataSource = new ConnectionLeakDataSource();
+        try (Connection connection = dataSource.getConnection()) {
+            connection.prepareStatement("create table users (id int auto_increment not null primary key)").execute();
+            connection.prepareStatement("insert into users (id) values (1)").execute();
+        }
     }
 
     public void insertWithForgottenCommit() throws SQLException {
@@ -69,23 +72,6 @@ public class ConnectionLeakDAO {
                 connection.close();
             }
         }
-    }
-
-    private DataSource createDataSource() throws SQLException {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUrl("jdbc:h2:mem:play;TRACE_LEVEL_SYSTEM_OUT=2");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("sa");
-        dataSource.setMaxTotal(1);
-        dataSource.setRollbackOnReturn(false);
-        dataSource.setEnableAutoCommitOnReturn(false);
-
-        try (Connection connection = dataSource.getConnection()) {
-            connection.prepareStatement("create table users (id int auto_increment not null primary key)").execute();
-            connection.prepareStatement("insert into users (id) values (1)").execute();
-        }
-
-        return dataSource;
     }
 
 }
