@@ -61,7 +61,6 @@ public class SolarSystemService {
         return insertEvent("addPlanetAnnotatedTransaction", pm);
     }
 
-    @SuppressWarnings("Duplicates")
     private PlanetAndMoonNames addPlanetNoTx() {
         PlanetAndMoonNames pm = generatePlanetAndMoons();
         int planetId = solarSystemDAO.insertPlanet(pm.getPlanetName());
@@ -70,7 +69,6 @@ public class SolarSystemService {
         return pm;
     }
 
-    @SuppressWarnings("Duplicates")
     private PlanetAndMoonNames addPlanetTx() {
         PlanetAndMoonNames pm = generatePlanetAndMoons();
         return transactionTemplate.execute(status -> {
