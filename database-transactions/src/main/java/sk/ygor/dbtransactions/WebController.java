@@ -1,6 +1,8 @@
 package sk.ygor.dbtransactions;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sk.ygor.dbtransactions.connectionleak.ConnectionLeakDAO;
@@ -23,6 +25,12 @@ class WebController {
 
     @Autowired
     private TransactionalDAO transactionalDAO;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @RequestMapping("/listPlanetsAndEvents")
     String listPlanetsAndEvents() {
@@ -80,6 +88,14 @@ class WebController {
     String addPlanetAnnotatedTransactionUseInnerTx() {
         PlanetAndMoonNames pm = solarSystemService.addPlanetAnnotatedTransaction(true);
         return formatCreatedPlanetMessage(pm);
+    }
+
+    @RequestMapping("/addPlanetPure")
+    String addPlanetPure() {
+        return transactionTemplate.execute(transactionStatus -> {
+            PlanetAndMoonNames pm = solarSystemService.addPlanetPure(jdbcTemplate);
+            return formatCreatedPlanetMessage(pm);
+        });
     }
 
     @RequestMapping("/restorePlanets")

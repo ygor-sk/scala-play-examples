@@ -1,6 +1,7 @@
 package sk.ygor.dbtransactions;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -59,6 +60,14 @@ public class SolarSystemService {
         insertEvent("addPlanetAnnotatedTransaction");
         PlanetAndMoonNames pm = useInnerTx ? addPlanetTx() : addPlanetNoTx();
         return insertEvent("addPlanetAnnotatedTransaction", pm);
+    }
+
+    public PlanetAndMoonNames addPlanetPure(JdbcTemplate jdbcTemplate) {
+        PlanetAndMoonNames pm = generatePlanetAndMoons();
+        jdbcTemplate.update("insert into audit (event) values (?)", "addPlanetPure");
+        jdbcTemplate.update("insert into planet (name) values (?)", pm.getPlanetName());
+        jdbcTemplate.update("insert into audit (event) values (?)", "[End]: addPlanetPure: " + pm.getPlanetName());
+        return pm;
     }
 
     private PlanetAndMoonNames addPlanetNoTx() {
