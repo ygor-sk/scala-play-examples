@@ -75,8 +75,4 @@ public class Utils {
         }
     }
 
-    public void throwException() {
-        throw new RuntimeException("Simulated exception");
-    }
-
 }

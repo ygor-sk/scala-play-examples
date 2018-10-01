@@ -35,9 +35,9 @@ public class ConnectionLeakDAO {
 
     public List<Integer> readRowsWithNoTransaction() throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
-            List<Integer> result = new ArrayList<>();
             try (PreparedStatement statement = connection.prepareStatement("select * from users")) {
                 try (ResultSet rs = statement.executeQuery()) {
+                    List<Integer> result = new ArrayList<>();
                     while (rs.next()) {
                         result.add(rs.getInt("id"));
                     }
@@ -47,7 +47,7 @@ public class ConnectionLeakDAO {
         }
     }
 
-    public void insertWithProperHandling(boolean insertDuplicate) throws Exception {
+    public void insertWithProperHandling(boolean insertDuplicate) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -61,15 +61,27 @@ public class ConnectionLeakDAO {
             connection.setAutoCommit(true); // commit
         } catch (Exception ex) {
             if (connection != null) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (SQLException e) {
+                    // do nothing
+                }
             }
             throw ex;
         } finally {
             if (statement != null) {
-                statement.close();
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    // do nothing
+                }
             }
             if (connection != null) {
-                connection.close();
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    // do nothing
+                }
             }
         }
     }

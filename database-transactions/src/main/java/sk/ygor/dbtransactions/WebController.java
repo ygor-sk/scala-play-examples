@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sk.ygor.dbtransactions.connectionleak.ConnectionLeakDAO;
+import sk.ygor.dbtransactions.patterns.TransactionalDAO;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -18,6 +20,9 @@ class WebController {
 
     @Autowired
     private ConnectionLeakDAO connectionLeakDAO;
+
+    @Autowired
+    private TransactionalDAO transactionalDAO;
 
     @RequestMapping("/listPlanetsAndEvents")
     String listPlanetsAndEvents() {
@@ -105,6 +110,13 @@ class WebController {
     String insertWithProperHandlingRollback() throws Exception {
         connectionLeakDAO.insertWithProperHandling(true);
         return "Inserted new user";
+    }
+
+    @RequestMapping("/testTransactionalDAO")
+    String testTransactionalDAO() throws SQLException {
+        String result = transactionalDAO.test();
+        List<Integer> list = transactionalDAO.list();
+        return "testTransactionalDAO: " + result + ". List: " + list;
     }
 
     private String formatCreatedPlanetMessage(PlanetAndMoonNames pm) {
