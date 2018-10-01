@@ -67,7 +67,7 @@ public class TransactionalDAO {
             }
             return result;
         } catch (Exception ex) {
-            if (connection[0] != null) {
+            if (level == 0 && connection[0] != null) {
                 try {
                     connection[0].rollback();
                 } catch (SQLException e) {
@@ -83,7 +83,7 @@ public class TransactionalDAO {
                     // no handling
                 }
             }
-            if (connection[0] != null) {
+            if (level == 0 && connection[0] != null) {
                 try {
                     connection[0].close();
                 } catch (SQLException e) {
