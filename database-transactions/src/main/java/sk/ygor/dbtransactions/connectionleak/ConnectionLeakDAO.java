@@ -29,7 +29,7 @@ public class ConnectionLeakDAO {
             try (PreparedStatement statement = connection.prepareStatement("insert into users (id) values (null)")) {
                 statement.executeUpdate();
             }
-            // connection.setAutoCommit(true); // developer forgot to commit
+            // connection.setAutoCommit(true); // developer forgot to commit or unexpected exception was thrown
         }
     }
 
