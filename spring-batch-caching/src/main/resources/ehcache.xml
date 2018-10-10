@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://www.ehcache.org/ehcache.xsd">
+
+    <cacheFacade name="instruments"
+           maxElementsInMemory="200000"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU">
+    </cacheFacade>
+
+</ehcache>
