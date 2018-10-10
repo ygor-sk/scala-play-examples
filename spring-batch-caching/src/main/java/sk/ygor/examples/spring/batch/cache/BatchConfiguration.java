@@ -39,24 +39,24 @@ public class BatchConfiguration {
         return jobBuilderFactory.get("wordChecksumJob")
                 .incrementer(new RunIdIncrementer())
                 .start(dummyStep())
-                .next(createStep(wordSourceFactory.plain(), ChecksumProcessor::new))
-                .next(createStep(wordSourceFactory.cachedBySpring(), ChecksumProcessor::new))
-                .next(createStep(wordSourceFactory.cachedByHashMap(), ChecksumProcessor::new))
-                .next(createStep(wordSourceFactory.cachedByLinkedHashMap(maximumCacheSize), ChecksumProcessor::new))
-                .next(createStep(wordSourceFactory.cachedByGuava(maximumCacheSize), ChecksumProcessor::new))
-                .next(createStep(wordSourceFactory.cachedByEhCache(maximumCacheSize), ChecksumProcessor::new))
-                .next(createStep(wordSourceFactory.plain(), wordSource -> new ChecksumProcessorCached(wordSource, new GuavaCacheFacade<>(maximumCacheSize * 20))))
-                .next(createStep(wordSourceFactory.cachedByHashMapSoftReference(), ChecksumProcessor::new))
+                .next(createStep("Plain", wordSourceFactory.plain(), ChecksumProcessor::new))
+                .next(createStep("Spring cached", wordSourceFactory.cachedBySpring(), ChecksumProcessor::new))
+                .next(createStep("HashMap", wordSourceFactory.cachedByHashMap(), ChecksumProcessor::new))
+                .next(createStep("LinkedHashMap", wordSourceFactory.cachedByLinkedHashMap(maximumCacheSize), ChecksumProcessor::new))
+                .next(createStep("Guava", wordSourceFactory.cachedByGuava(maximumCacheSize), ChecksumProcessor::new))
+                .next(createStep("EhCache", wordSourceFactory.cachedByEhCache(maximumCacheSize), ChecksumProcessor::new))
+                .next(createStep("Guava(smart)", wordSourceFactory.plain(), wordSource -> new ChecksumProcessorCached(wordSource, new GuavaCacheFacade<>(maximumCacheSize * 20))))
+                .next(createStep("HashMap(soft)", wordSourceFactory.cachedByHashMapSoftReference(), ChecksumProcessor::new))
                 .build();
     }
 
-    private Step createStep(WordSource wordSource, Function<WordSource, ChecksumProcessor> processorFactory) {
+    private Step createStep(String stepName, WordSource wordSource, Function<WordSource, ChecksumProcessor> processorFactory) {
         RowItemReader reader = new RowItemReader(exampleParameters.getStepSize(), exampleParameters.getStepCount(), exampleParameters.getColumnCount());
         ChecksumProcessor processor = processorFactory.apply(wordSource);
         CheckSumWriter writer = new CheckSumWriter();
         StepExecutionListener listener = new StepExecutionListener(wordSource, processor, writer, exampleParameters.getExpectedCheckSum());
 
-        return stepBuilderFactory.get("step-" + wordSource.getName() + "-" + processor.getName())
+        return stepBuilderFactory.get(stepName)
                 .<Row, Integer>chunk(exampleParameters.getStepSize())
                 .reader(reader)
                 .processor(processor)
