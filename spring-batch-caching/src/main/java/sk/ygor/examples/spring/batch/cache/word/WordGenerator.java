@@ -9,12 +9,12 @@ import java.util.Random;
 public class WordGenerator implements WordSource {
 
     @Autowired
-    private ExampleParameters exampleParameters;
+    private JobParameters jobParameters;
 
     @Override
     public Word getWordForNumber(int wordNumber) {
         Random random = new Random(wordNumber);
-        char[] chars = new char[exampleParameters.getWordLength()];
+        char[] chars = new char[jobParameters.getWordLength()];
         for (int j = 0; j < chars.length; j++) {
             chars[j] = (char) (random.nextInt(26) + 'a');
         }

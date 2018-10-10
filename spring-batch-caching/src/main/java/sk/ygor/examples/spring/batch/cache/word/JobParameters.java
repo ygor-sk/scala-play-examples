@@ -1,6 +1,6 @@
 package sk.ygor.examples.spring.batch.cache.word;
 
-public class ExampleParameters {
+public class JobParameters {
 
     private final int wordLength;
     private final int columnCount;
@@ -9,7 +9,7 @@ public class ExampleParameters {
     private final int maximumCacheSize;
     private final int expectedCheckSum;
 
-    public ExampleParameters(int wordLength, int columnCount, int stepSize, int stepCount, int maximumCacheSize, int expectedCheckSum) {
+    public JobParameters(int wordLength, int columnCount, int stepSize, int stepCount, int maximumCacheSize, int expectedCheckSum) {
         this.wordLength = wordLength;
         this.columnCount = columnCount;
         this.stepSize = stepSize;

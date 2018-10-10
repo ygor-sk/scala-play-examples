@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import sk.ygor.examples.spring.batch.cache.facade.GuavaCacheFacade;
 import sk.ygor.examples.spring.batch.cache.row.Row;
-import sk.ygor.examples.spring.batch.cache.word.ExampleParameters;
+import sk.ygor.examples.spring.batch.cache.word.JobParameters;
 import sk.ygor.examples.spring.batch.cache.word.WordSource;
 
 import java.util.function.Function;
@@ -22,7 +22,7 @@ import java.util.function.Function;
 public class BatchConfiguration {
 
     @Autowired
-    ExampleParameters exampleParameters;
+    JobParameters jobParameters;
 
     @Autowired
     WordSourceFactory wordSourceFactory;
@@ -35,7 +35,7 @@ public class BatchConfiguration {
 
     @Bean
     public Job wordChecksumJob() {
-        int maximumCacheSize = exampleParameters.getMaximumCacheSize();
+        int maximumCacheSize = jobParameters.getMaximumCacheSize();
         return jobBuilderFactory.get("wordChecksumJob")
                 .incrementer(new RunIdIncrementer())
                 .start(dummyStep())
@@ -51,13 +51,13 @@ public class BatchConfiguration {
     }
 
     private Step createStep(String stepName, WordSource wordSource, Function<WordSource, ChecksumProcessor> processorFactory) {
-        RowItemReader reader = new RowItemReader(exampleParameters.getStepSize(), exampleParameters.getStepCount(), exampleParameters.getColumnCount());
+        RowItemReader reader = new RowItemReader(jobParameters.getStepSize(), jobParameters.getStepCount(), jobParameters.getColumnCount());
         ChecksumProcessor processor = processorFactory.apply(wordSource);
         CheckSumWriter writer = new CheckSumWriter();
-        StepExecutionListener listener = new StepExecutionListener(wordSource, processor, writer, exampleParameters.getExpectedCheckSum());
+        StepExecutionListener listener = new StepExecutionListener(wordSource, processor, writer, jobParameters.getExpectedCheckSum());
 
         return stepBuilderFactory.get(stepName)
-                .<Row, Integer>chunk(exampleParameters.getStepSize())
+                .<Row, Integer>chunk(jobParameters.getStepSize())
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
