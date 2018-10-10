@@ -10,7 +10,8 @@ import org.springframework.batch.item.adapter.ItemProcessorAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import sk.ygor.examples.spring.batch.cache.facade.GuavaCacheFacade;
+import sk.ygor.examples.spring.batch.cache.facade.LimitedLinkedHashMap;
+import sk.ygor.examples.spring.batch.cache.facade.MapCacheFacade;
 import sk.ygor.examples.spring.batch.cache.row.Row;
 import sk.ygor.examples.spring.batch.cache.word.JobParameters;
 import sk.ygor.examples.spring.batch.cache.word.WordSource;
@@ -45,7 +46,7 @@ public class BatchConfiguration {
                 .next(createStep("LinkedHashMap", wordSourceFactory.cachedByLinkedHashMap(maximumCacheSize), ChecksumProcessor::new))
                 .next(createStep("Guava", wordSourceFactory.cachedByGuava(maximumCacheSize), ChecksumProcessor::new))
                 .next(createStep("EhCache", wordSourceFactory.cachedByEhCache(maximumCacheSize), ChecksumProcessor::new))
-                .next(createStep("Guava(smart)", wordSourceFactory.plain(), wordSource -> new ChecksumProcessorCached(wordSource, new GuavaCacheFacade<>(maximumCacheSize * 20))))
+                .next(createStep("LinkedHashMap(smart)", wordSourceFactory.plain(), wordSource -> new ChecksumProcessorCached(wordSource, new MapCacheFacade<>(new LimitedLinkedHashMap<>(maximumCacheSize * 20)))))
                 .next(createStep("HashMap(soft)", wordSourceFactory.cachedByHashMapSoftReference(), ChecksumProcessor::new))
                 .build();
     }
