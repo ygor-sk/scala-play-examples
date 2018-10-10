@@ -36,7 +36,7 @@ public class BatchConfiguration {
     @Bean
     public Job wordChecksumJob() {
         int maximumCacheSize = exampleParameters.getMaximumCacheSize();
-        return jobBuilderFactory.get("warm up")
+        return jobBuilderFactory.get("wordChecksumJob")
                 .incrementer(new RunIdIncrementer())
                 .start(dummyStep())
                 .next(createStep(wordSourceFactory.plain(), ChecksumProcessor::new))
