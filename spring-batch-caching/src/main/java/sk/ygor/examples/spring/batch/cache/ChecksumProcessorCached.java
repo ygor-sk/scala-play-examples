@@ -3,11 +3,11 @@ package sk.ygor.examples.spring.batch.cache;
 import sk.ygor.examples.spring.batch.cache.facade.CacheFacade;
 import sk.ygor.examples.spring.batch.cache.word.WordSource;
 
-class ChecksumItemProcessorCached extends ChecksumItemProcessor {
+class ChecksumProcessorCached extends ChecksumProcessor {
 
     private final CacheFacade<Integer, Integer> cacheFacade;
 
-    public ChecksumItemProcessorCached(WordSource wordSource, CacheFacade<Integer, Integer> cacheFacade) {
+    public ChecksumProcessorCached(WordSource wordSource, CacheFacade<Integer, Integer> cacheFacade) {
         super(wordSource);
         this.cacheFacade = cacheFacade;
     }

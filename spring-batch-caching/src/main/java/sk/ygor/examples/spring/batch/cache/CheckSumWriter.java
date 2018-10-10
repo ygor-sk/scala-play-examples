@@ -6,9 +6,9 @@ import org.springframework.batch.item.ItemWriter;
 
 import java.util.List;
 
-public class HashCodeWriter implements ItemWriter<Integer> {
+public class CheckSumWriter implements ItemWriter<Integer> {
 
-    private static final Logger logger = LoggerFactory.getLogger(HashCodeWriter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CheckSumWriter.class);
 
     private int checksum = 0;
     private int rowsWritten = 0;

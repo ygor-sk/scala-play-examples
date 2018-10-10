@@ -4,11 +4,11 @@ import org.springframework.batch.item.ItemProcessor;
 import sk.ygor.examples.spring.batch.cache.row.Row;
 import sk.ygor.examples.spring.batch.cache.word.WordSource;
 
-class ChecksumItemProcessor implements ItemProcessor<Row, Integer> {
+class ChecksumProcessor implements ItemProcessor<Row, Integer> {
 
     private final WordSource wordSource;
 
-    public ChecksumItemProcessor(WordSource wordSource) {
+    public ChecksumProcessor(WordSource wordSource) {
         this.wordSource = wordSource;
     }
 

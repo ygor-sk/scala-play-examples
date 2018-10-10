@@ -5,7 +5,6 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.job.flow.FlowJob;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.adapter.ItemProcessorAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,21 +39,21 @@ public class BatchConfiguration {
         return jobBuilderFactory.get("warm up")
                 .incrementer(new RunIdIncrementer())
                 .start(dummyStep())
-//                .next(createStep(wordSourceFactory.plain(), ChecksumItemProcessor::new))
-//                .next(createStep(wordSourceFactory.cachedBySpring(), ChecksumItemProcessor::new))
-//                .next(createStep(wordSourceFactory.cachedByHashMap(), ChecksumItemProcessor::new))
-//                .next(createStep(wordSourceFactory.cachedByLinkedHashMap(maximumCacheSize), ChecksumItemProcessor::new))
-//                .next(createStep(wordSourceFactory.cachedByGuava(maximumCacheSize), ChecksumItemProcessor::new))
-//                .next(createStep(wordSourceFactory.cachedByEhCache(maximumCacheSize), ChecksumItemProcessor::new))
-//                .next(createStep(wordSourceFactory.plain(), wordSource -> new ChecksumItemProcessorCached(wordSource, new GuavaCacheFacade<>(maximumCacheSize * 20))))
-                .next(createStep(wordSourceFactory.cachedByHashMapSoftReference(), ChecksumItemProcessor::new))
+                .next(createStep(wordSourceFactory.plain(), ChecksumProcessor::new))
+                .next(createStep(wordSourceFactory.cachedBySpring(), ChecksumProcessor::new))
+                .next(createStep(wordSourceFactory.cachedByHashMap(), ChecksumProcessor::new))
+                .next(createStep(wordSourceFactory.cachedByLinkedHashMap(maximumCacheSize), ChecksumProcessor::new))
+                .next(createStep(wordSourceFactory.cachedByGuava(maximumCacheSize), ChecksumProcessor::new))
+                .next(createStep(wordSourceFactory.cachedByEhCache(maximumCacheSize), ChecksumProcessor::new))
+                .next(createStep(wordSourceFactory.plain(), wordSource -> new ChecksumProcessorCached(wordSource, new GuavaCacheFacade<>(maximumCacheSize * 20))))
+                .next(createStep(wordSourceFactory.cachedByHashMapSoftReference(), ChecksumProcessor::new))
                 .build();
     }
 
-    private Step createStep(WordSource wordSource, Function<WordSource, ChecksumItemProcessor> processorFactory) {
+    private Step createStep(WordSource wordSource, Function<WordSource, ChecksumProcessor> processorFactory) {
         RowItemReader reader = new RowItemReader(exampleParameters.getStepSize(), exampleParameters.getStepCount(), exampleParameters.getColumnCount());
-        ChecksumItemProcessor processor = processorFactory.apply(wordSource);
-        HashCodeWriter writer = new HashCodeWriter();
+        ChecksumProcessor processor = processorFactory.apply(wordSource);
+        CheckSumWriter writer = new CheckSumWriter();
         StepExecutionListener listener = new StepExecutionListener(wordSource, processor, writer, exampleParameters.getExpectedCheckSum());
 
         return stepBuilderFactory.get("step-" + wordSource.getName() + "-" + processor.getName())

@@ -12,13 +12,13 @@ class StepExecutionListener extends StepExecutionListenerSupport {
     private static final Logger logger = LoggerFactory.getLogger(StepExecutionListener.class);
 
     private final WordSource wordSource;
-    private final ChecksumItemProcessor processor;
-    private final HashCodeWriter writer;
+    private final ChecksumProcessor processor;
+    private final CheckSumWriter writer;
     private final int expectedCheckSum;
 
     private long start;
 
-    public StepExecutionListener(WordSource wordSource, ChecksumItemProcessor processor, HashCodeWriter writer, int expectedCheckSum) {
+    public StepExecutionListener(WordSource wordSource, ChecksumProcessor processor, CheckSumWriter writer, int expectedCheckSum) {
         this.expectedCheckSum = expectedCheckSum;
         this.wordSource = wordSource;
         this.processor = processor;

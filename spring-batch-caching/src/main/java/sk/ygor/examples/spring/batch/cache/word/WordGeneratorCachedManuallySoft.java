@@ -2,7 +2,7 @@ package sk.ygor.examples.spring.batch.cache.word;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sk.ygor.examples.spring.batch.cache.HashCodeWriter;
+import sk.ygor.examples.spring.batch.cache.CheckSumWriter;
 import sk.ygor.examples.spring.batch.cache.facade.CacheFacade;
 
 import java.lang.ref.SoftReference;
@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 public class WordGeneratorCachedManuallySoft implements WordSource {
 
-    private static final Logger logger = LoggerFactory.getLogger(HashCodeWriter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CheckSumWriter.class);
 
     private final WordGenerator generator;
     private final Supplier<CacheFacade<Integer, Word>> cacheFacadeSupplier;
